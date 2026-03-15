@@ -152,9 +152,10 @@ export default function WorkoutsTab({ onNavigateToLibrary }: { onNavigateToLibra
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
+                      e.preventDefault();
                       deleteTemplate(template.id, template.name);
                     }}
-                    className="text-apple-text-muted hover:text-red-400 transition-colors"
+                    className="p-2 -m-2 text-apple-text-muted hover:text-red-400 transition-colors z-20 relative"
                     title="Delete Routine"
                   >
                     <Trash2 size={20} />

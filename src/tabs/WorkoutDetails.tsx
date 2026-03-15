@@ -60,6 +60,18 @@ export default function WorkoutDetails({ templateId, onClose, onStart, onAddExer
             placeholder="Workout Name"
           />
         </div>
+        <button 
+          onClick={async () => {
+            if (window.confirm(`Are you sure you want to delete "${template.name}"?`)) {
+              await db.templates.delete(templateId);
+              onClose();
+            }
+          }}
+          className="p-2 text-white/50 hover:text-red-400 transition-colors"
+          title="Delete Workout"
+        >
+          <Trash2 size={24} />
+        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-6 pb-40">
