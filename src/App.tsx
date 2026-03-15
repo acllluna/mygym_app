@@ -38,7 +38,7 @@ export default function App() {
   return (
     <div className="h-[100dvh] w-full bg-black text-white flex flex-col font-sans selection:bg-apple-accent/30 overflow-hidden">
       {/* Header */}
-      <header className="mobile-header sticky top-0 bg-black/80 backdrop-blur-xl z-50 border-b border-white/10 shrink-0">
+      <header className="mobile-header sticky top-0 bg-black/80 backdrop-blur-xl z-50 border-b border-white/10 shrink-0" style={{ paddingTop: 'calc(var(--safe-top) + 0.5rem)' }}>
         <h1 className="text-3xl font-bold tracking-tight">Aura Fitness</h1>
         <p className="text-apple-text-muted text-xs sm:text-sm mt-0.5 font-medium">Your Personal AI Coach</p>
       </header>

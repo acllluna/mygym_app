@@ -101,7 +101,7 @@ export default function WorkoutDetails({ templateId, onClose, onStart, onAddExer
                   <button onClick={() => moveExercise(idx, 'down')} disabled={idx === template.exercises.length - 1} className="hover:text-white disabled:opacity-30 disabled:hover:text-white/50"><ChevronDown size={16} /></button>
                 </div>
 
-                <div className="flex gap-4 pr-12">
+                <div className="flex gap-4 pr-14">
                   <div 
                     className="w-16 h-16 bg-white/5 rounded-2xl overflow-hidden shrink-0 relative cursor-pointer group"
                     onClick={() => { if (exDef) setSelectedExercise(exDef); }}
@@ -112,20 +112,20 @@ export default function WorkoutDetails({ templateId, onClose, onStart, onAddExer
                       <div className="w-full h-full flex items-center justify-center"><Dumbbell size={20} className="text-white/20" /></div>
                     )}
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold mb-3 text-base leading-tight pr-4">{exDef?.name || 'Unknown Exercise'}</h4>
-                    <div className="flex items-center gap-4 text-sm scale-90 origin-left">
-                    <div className="flex items-center gap-3 bg-black/40 px-3 py-1.5 rounded-lg border border-white/5">
-                      <span className="text-xs text-apple-text-muted font-medium w-6">Sets</span>
-                      <button onClick={() => updateExercise(idx, 'targetSets', ex.targetSets - 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Minus size={14}/></button>
-                      <span className="font-mono text-base font-semibold w-4 text-center">{ex.targetSets}</span>
-                      <button onClick={() => updateExercise(idx, 'targetSets', ex.targetSets + 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Plus size={14}/></button>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold mb-3 text-sm sm:text-base leading-tight pr-2 truncate">{exDef?.name || 'Unknown Exercise'}</h4>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 text-sm scale-90 origin-left">
+                    <div className="flex items-center gap-2 bg-black/40 px-2 py-1 rounded-lg border border-white/5 w-fit">
+                      <span className="text-[10px] text-apple-text-muted font-medium w-6 uppercase">Sets</span>
+                      <button onClick={() => updateExercise(idx, 'targetSets', ex.targetSets - 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Minus size={12}/></button>
+                      <span className="font-mono text-sm font-semibold w-4 text-center">{ex.targetSets}</span>
+                      <button onClick={() => updateExercise(idx, 'targetSets', ex.targetSets + 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Plus size={12}/></button>
                     </div>
-                    <div className="flex items-center gap-3 bg-black/40 px-3 py-1.5 rounded-lg border border-white/5">
-                      <span className="text-xs text-apple-text-muted font-medium w-8">Reps</span>
-                      <button onClick={() => updateExercise(idx, 'targetReps', (ex.targetReps || 10) - 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Minus size={14}/></button>
-                      <span className="font-mono text-base font-semibold w-6 text-center">{ex.targetReps || 10}</span>
-                      <button onClick={() => updateExercise(idx, 'targetReps', (ex.targetReps || 10) + 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Plus size={14}/></button>
+                    <div className="flex items-center gap-2 bg-black/40 px-2 py-1 rounded-lg border border-white/5 w-fit">
+                      <span className="text-[10px] text-apple-text-muted font-medium w-6 uppercase">Reps</span>
+                      <button onClick={() => updateExercise(idx, 'targetReps', (ex.targetReps || 10) - 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Minus size={12}/></button>
+                      <span className="font-mono text-sm font-semibold w-4 text-center">{ex.targetReps || 10}</span>
+                      <button onClick={() => updateExercise(idx, 'targetReps', (ex.targetReps || 10) + 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Plus size={12}/></button>
                     </div>
                     </div>
                   </div>

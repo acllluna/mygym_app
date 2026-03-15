@@ -105,10 +105,11 @@ export default function ExerciseDetailsModal({ exercise, onClose }: ExerciseDeta
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full aspect-video bg-black/40 relative shrink-0">
-          <img src={exercise.gif_url || exercise.thumbnail_url} alt={exercise.name} className="w-full h-full object-cover" />
+          <img src={exercise.gif_url || exercise.thumbnail_url} alt={exercise.name} className="w-full h-full object-contain" />
           <button 
             onClick={(e) => { e.stopPropagation(); onClose(); }} 
-            className="absolute top-3 right-3 w-9 h-9 bg-black/60 backdrop-blur-xl rounded-full flex items-center justify-center hover:bg-black/80 transition-colors pointer-events-auto border border-white/10 z-10"
+            className="absolute top-4 right-4 w-9 h-9 bg-black/60 backdrop-blur-xl rounded-full flex items-center justify-center hover:bg-black/80 transition-colors pointer-events-auto border border-white/10 z-10"
+            style={{ top: 'max(1rem, var(--safe-top))' }}
           >
             <X size={20} className="text-white" />
           </button>

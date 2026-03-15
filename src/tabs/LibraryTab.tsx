@@ -295,32 +295,31 @@ function ExerciseCard({ exercise, selectedIds, toggleSelection }: { exercise: Ex
           <Dumbbell size={24} className="text-white/20" />
         )}
       </div>
-      <div className="flex-1 min-w-0 flex flex-col justify-center">
+      <div className="flex-1 min-w-0 pr-8">
         <h3 className="font-medium text-base leading-tight truncate">{exercise.name}</h3>
         
         <div className="mt-2 flex flex-col gap-1.5">
-          <div className="flex items-center gap-2 text-xs text-apple-text-muted">
+          <div className="flex items-center gap-2 text-[10px] text-apple-text-muted">
             <span className="font-medium text-white/70">Main:</span>
             <span className="truncate">{exercise.muscleGroup || 'Unknown'}</span>
-            <span className="opacity-50">•</span>
+            <span className="opacity-30">•</span>
             <span className="truncate">{exercise.bodyPart || 'Unknown'}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-apple-text-muted">
+          <div className="flex items-center gap-2 text-[10px] text-apple-text-muted">
             <span className="font-medium text-white/70">Equipment:</span>
             <span className="truncate">{exercise.equipment || 'None'}</span>
           </div>
 
           {exercise.secondaryMuscles && exercise.secondaryMuscles.length > 0 && (
-            <div className="flex items-center gap-2 text-xs text-apple-text-muted">
+            <div className="flex items-center gap-2 text-[10px] text-apple-text-muted">
               <span className="font-medium text-white/70">Other:</span>
               <span className="truncate">{exercise.secondaryMuscles.join(', ')}</span>
             </div>
           )}
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <h3 className="font-semibold text-lg max-w-[85%]">{exercise.name}</h3>
+      <div className="flex items-center">
         <button 
           className={`w-8 h-8 shrink-0 rounded-full flex items-center justify-center transition-colors z-10 ${selectedIds.has(exercise.id) ? 'bg-apple-accent text-black' : 'bg-white/10 text-white hover:bg-apple-accent hover:text-black'}`}
           onClick={(e) => {

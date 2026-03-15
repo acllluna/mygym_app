@@ -13,6 +13,9 @@
   --apple-green: #32D74B;
   --apple-red: #FF3B30;
   
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  
   --layout-padding: 1.5rem;
 }
 
@@ -41,6 +44,12 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100vw;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 /* Hide scrollbar for sleekness */
