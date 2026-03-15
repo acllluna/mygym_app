@@ -154,11 +154,11 @@ export default function LibraryTab() {
       </div>
 
       {/* Filters Row */}
-      <div className="flex gap-2 mb-6 shrink-0">
+      <div className="flex gap-3 mb-8 shrink-0">
         <select 
           value={filterBodyPart}
           onChange={(e) => setFilterBodyPart(e.target.value)}
-          className="flex-1 bg-apple-card border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-apple-accent transition-colors appearance-none"
+          className="flex-1 bg-apple-card border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-apple-accent/50 transition-all shadow-md appearance-none text-center"
         >
           <option value="all">Body Part: All</option>
           {uniqueBodyParts.map(bp => (
@@ -169,7 +169,7 @@ export default function LibraryTab() {
         <select 
           value={filterEquipment}
           onChange={(e) => setFilterEquipment(e.target.value)}
-          className="flex-1 bg-apple-card border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-apple-accent transition-colors appearance-none"
+          className="flex-1 bg-apple-card border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-apple-accent/50 transition-all shadow-md appearance-none text-center"
         >
           <option value="all">Equipment: All</option>
           {uniqueEquipment.map(eq => (
