@@ -154,11 +154,11 @@ export default function LibraryTab() {
       </div>
 
       {/* Filters Row */}
-      <div className="flex gap-3 mb-8 shrink-0">
+      <div className="grid grid-cols-2 gap-3 mb-8 shrink-0">
         <select 
           value={filterBodyPart}
           onChange={(e) => setFilterBodyPart(e.target.value)}
-          className="flex-1 bg-apple-card border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-apple-accent/50 transition-all shadow-md appearance-none text-center"
+          className="bg-apple-card border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-apple-accent/50 transition-all shadow-md appearance-none text-center"
         >
           <option value="all">Body Part: All</option>
           {uniqueBodyParts.map(bp => (
@@ -169,7 +169,7 @@ export default function LibraryTab() {
         <select 
           value={filterEquipment}
           onChange={(e) => setFilterEquipment(e.target.value)}
-          className="flex-1 bg-apple-card border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-apple-accent/50 transition-all shadow-md appearance-none text-center"
+          className="bg-apple-card border border-white/5 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-apple-accent/50 transition-all shadow-md appearance-none text-center"
         >
           <option value="all">Equipment: All</option>
           {uniqueEquipment.map(eq => (
@@ -178,7 +178,7 @@ export default function LibraryTab() {
         </select>
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-20 pr-2 space-y-8">
+      <div className="flex-1 overflow-y-auto pb-20 space-y-8 scrollbar-none">
         {filteredExercises.length === 0 ? (
           <div className="text-center text-apple-text-muted mt-10">
             <Dumbbell size={48} className="mx-auto mb-4 opacity-20" />
