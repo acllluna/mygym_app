@@ -1,5 +1,18 @@
 export type ExerciseType = 'weighted' | 'bodyweight' | 'cardio' | 'assisted' | 'duration';
 
+export interface UserProfile {
+  id: string;
+  name: string;
+  email?: string;
+  lastSync?: number;
+  avatarUrl?: string;
+  settings?: {
+    useCloudSync: boolean;
+    language: string;
+    units: 'kg' | 'lbs';
+  };
+}
+
 export interface Exercise {
   id: string;
   name: string;
@@ -22,6 +35,7 @@ export interface TemplateExercise {
 
 export interface SessionTemplate {
   id: string;
+  profileId?: string; // Link to user profile
   name: string;
   description?: string;
   exercises: TemplateExercise[];
@@ -43,6 +57,7 @@ export interface LoggedExercise {
 
 export interface WorkoutSession {
   id: string;
+  profileId?: string; // Link to user profile
   templateId?: string;
   name: string;
   startTime: number;

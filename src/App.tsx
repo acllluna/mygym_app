@@ -5,9 +5,10 @@ import DashboardTab from './tabs/DashboardTab';
 import WorkoutsTab from './tabs/WorkoutsTab';
 import LibraryTab from './tabs/LibraryTab';
 import CoachTab from './tabs/CoachTab';
+import ProfileTab from './tabs/ProfileTab';
 import { db } from './db';
 
-type Tab = 'summary' | 'workouts' | 'library' | 'coach';
+type Tab = 'summary' | 'workouts' | 'library' | 'coach' | 'profile';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('summary');
@@ -60,6 +61,7 @@ export default function App() {
             {activeTab === 'workouts' && <WorkoutsTab onNavigateToLibrary={() => setActiveTab('library')} />}
             {activeTab === 'library' && <LibraryTab />}
             {activeTab === 'coach' && <CoachTab />}
+            {activeTab === 'profile' && <ProfileTab />}
           </motion.div>
         </AnimatePresence>
       </main>
@@ -71,6 +73,7 @@ export default function App() {
           <NavItem icon={<Dumbbell size={24} />} label="Workouts" active={activeTab === 'workouts'} onClick={() => setActiveTab('workouts')} />
           <NavItem icon={<BookOpen size={24} />} label="Library" active={activeTab === 'library'} onClick={() => setActiveTab('library')} />
           <NavItem icon={<Bot size={24} />} label="Coach" active={activeTab === 'coach'} onClick={() => setActiveTab('coach')} />
+          <NavItem icon={<User size={24} />} label="Profile" active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} />
         </div>
       </nav>
     </div>

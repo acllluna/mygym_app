@@ -8,10 +8,13 @@ import WorkoutBuilder from './WorkoutBuilder';
 import WorkoutDetails from './WorkoutDetails';
 import SessionSummaryModal from './SessionSummaryModal';
 import ExerciseDetailsModal from '../components/ExerciseDetailsModal';
+import { googleDriveService } from '../services/GoogleDriveService';
 
 export default function WorkoutsTab({ onNavigateToLibrary }: { onNavigateToLibrary?: () => void }) {
   const templates = useLiveQuery(() => db.templates.toArray());
   const sessions = useLiveQuery(() => db.sessions.toArray());
+  const profile = useLiveQuery(() => db.profiles.toCollection().first());
+  
   const [activeSession, setActiveSession] = useState<WorkoutSession | null>(null);
   const [showBuilder, setShowBuilder] = useState(false);
   const [viewingTemplateId, setViewingTemplateId] = useState<string | null>(null);
@@ -36,6 +39,7 @@ export default function WorkoutsTab({ onNavigateToLibrary }: { onNavigateToLibra
 
     const newSession: WorkoutSession = {
       id: uuidv4(),
+      profileId: profile?.id,
       templateId: template.id,
       name: template.name,
       startTime: Date.now(),
@@ -44,7 +48,7 @@ export default function WorkoutsTab({ onNavigateToLibrary }: { onNavigateToLibra
         sets: Array.from({ length: ex.targetSets }, () => ({
           id: uuidv4(),
           reps: ex.targetReps,
-          weight: getPrWeight(ex.exerciseId) || 0, // Pre-populate with PR weight or 0
+          weight: getPrWeight(ex.exerciseId) || 0,
           completed: false
         }))
       }))
@@ -69,6 +73,13 @@ export default function WorkoutsTab({ onNavigateToLibrary }: { onNavigateToLibra
     
     await db.sessions.put(updatedSession);
     setActiveSession(null);
+
+    // Auto-sync to Google Drive in background
+    if (profile?.settings?.useCloudSync) {
+      googleDriveService.uploadBackup().catch(err => {
+        console.error('Auto-sync failed:', err);
+      });
+    }
   };
 
   const discardSession = async (sessionId: string) => {
