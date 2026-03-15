@@ -1,0 +1,36 @@
+project:
+  name: "Session and Analytics Enhancements"
+  scale: LARGE
+  started: "2026-03-14T19:04:10.582Z"
+  current_phase: E
+
+phases:
+  P:
+    status: filled
+    started_at: "2026-03-14T19:04:10.582Z"
+    completed_at: "2026-03-14T19:13:54.027Z"
+  R:
+    status: filled
+    started_at: "2026-03-14T19:13:54.028Z"
+    completed_at: "2026-03-14T20:35:33.194Z"
+  E:
+    status: in_progress
+    started_at: "2026-03-14T20:35:33.195Z"
+  V:
+    status: pending
+  C:
+    status: pending
+
+execution:
+  history:
+    - timestamp: "2026-03-14T20:35:33.195Z"
+      phase: E
+      action: started
+  last_activity: "2026-03-14T20:35:33.195Z"
+  resume_context: "Fase E (Execução) em progresso"
+
+settings:
+  autonomous_mode: false
+  require_plan: false
+  require_approval: false
+

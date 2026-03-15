@@ -1,0 +1,421 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-03-14T18:09:25.350Z",
+  "stack": {
+    "primaryLanguage": "typescript",
+    "languages": [
+      "javascript",
+      "typescript",
+      "python"
+    ],
+    "frameworks": [],
+    "buildTools": [
+      "vite"
+    ],
+    "testFrameworks": [],
+    "packageManager": "npm",
+    "isMonorepo": false,
+    "hasDocker": false,
+    "hasCI": false
+  },
+  "structure": {
+    "totalFiles": 2482,
+    "rootPath": ".",
+    "topDirectories": [
+      {
+        "name": "exercise library",
+        "fileCount": 1,
+        "description": "Shared library code"
+      },
+      {
+        "name": "public",
+        "fileCount": 2463,
+        "description": "Public static assets"
+      },
+      {
+        "name": "Scripts",
+        "fileCount": 1,
+        "description": "Build and utility scripts"
+      },
+      {
+        "name": "src",
+        "fileCount": 9,
+        "description": "Source code root"
+      }
+    ],
+    "languageDistribution": [
+      {
+        "extension": ".jpg",
+        "count": 1231
+      },
+      {
+        "extension": ".gif",
+        "count": 1231
+      },
+      {
+        "extension": ".tsx",
+        "count": 6
+      },
+      {
+        "extension": ".json",
+        "count": 5
+      },
+      {
+        "extension": ".ts",
+        "count": 3
+      },
+      {
+        "extension": ".md",
+        "count": 2
+      },
+      {
+        "extension": ".html",
+        "count": 1
+      },
+      {
+        "extension": ".css",
+        "count": 1
+      },
+      {
+        "extension": ".py",
+        "count": 1
+      },
+      {
+        "extension": ".csv",
+        "count": 1
+      }
+    ]
+  },
+  "architecture": {
+    "layers": [
+      {
+        "name": "Utils",
+        "description": "Shared utilities and helpers",
+        "directories": [
+          "src/tabs"
+        ],
+        "symbolCount": 2,
+        "dependsOn": []
+      }
+    ],
+    "patterns": [],
+    "entryPoints": [
+      "src/main.tsx"
+    ],
+    "mainEntryPoints": [
+      "src/main.tsx"
+    ],
+    "moduleExports": []
+  },
+  "symbols": {
+    "classes": [
+      {
+        "name": "AuraFitnessDB",
+        "kind": "class",
+        "file": "src/db.ts",
+        "line": 4,
+        "exported": true
+      }
+    ],
+    "interfaces": [
+      {
+        "name": "Exercise",
+        "kind": "interface",
+        "file": "src/types.ts",
+        "line": 3,
+        "exported": true
+      },
+      {
+        "name": "LoggedExercise",
+        "kind": "interface",
+        "file": "src/types.ts",
+        "line": 39,
+        "exported": true
+      },
+      {
+        "name": "LoggedSet",
+        "kind": "interface",
+        "file": "src/types.ts",
+        "line": 31,
+        "exported": true
+      },
+      {
+        "name": "SessionTemplate",
+        "kind": "interface",
+        "file": "src/types.ts",
+        "line": 23,
+        "exported": true
+      },
+      {
+        "name": "TemplateExercise",
+        "kind": "interface",
+        "file": "src/types.ts",
+        "line": 16,
+        "exported": true
+      },
+      {
+        "name": "WorkoutSession",
+        "kind": "interface",
+        "file": "src/types.ts",
+        "line": 44,
+        "exported": true
+      }
+    ],
+    "functions": [
+      {
+        "name": "convert_csv_to_json",
+        "kind": "function",
+        "file": "Scripts/convert_csv.py",
+        "line": 5,
+        "exported": true
+      },
+      {
+        "name": "ActiveSessionView",
+        "kind": "function",
+        "file": "src/tabs/WorkoutsTab.tsx",
+        "line": 96,
+        "exported": false
+      },
+      {
+        "name": "ExerciseCard",
+        "kind": "function",
+        "file": "src/tabs/LibraryTab.tsx",
+        "line": 150,
+        "exported": false
+      },
+      {
+        "name": "finishSession",
+        "kind": "function",
+        "file": "src/tabs/WorkoutsTab.tsx",
+        "line": 33,
+        "exported": false
+      },
+      {
+        "name": "formatTime",
+        "kind": "function",
+        "file": "src/tabs/WorkoutsTab.tsx",
+        "line": 115,
+        "exported": false
+      },
+      {
+        "name": "handleFileUpload",
+        "kind": "function",
+        "file": "src/tabs/LibraryTab.tsx",
+        "line": 15,
+        "exported": false
+      },
+      {
+        "name": "handleSend",
+        "kind": "function",
+        "file": "src/tabs/CoachTab.tsx",
+        "line": 22,
+        "exported": false
+      },
+      {
+        "name": "loadInitialExercises",
+        "kind": "function",
+        "file": "src/App.tsx",
+        "line": 17,
+        "exported": false
+      },
+      {
+        "name": "NavItem",
+        "kind": "function",
+        "file": "src/App.tsx",
+        "line": 86,
+        "exported": false
+      },
+      {
+        "name": "s",
+        "kind": "function",
+        "file": "src/tabs/WorkoutsTab.tsx",
+        "line": 117,
+        "exported": false
+      },
+      {
+        "name": "startSession",
+        "kind": "function",
+        "file": "src/tabs/WorkoutsTab.tsx",
+        "line": 12,
+        "exported": false
+      },
+      {
+        "name": "toggleSet",
+        "kind": "function",
+        "file": "src/tabs/WorkoutsTab.tsx",
+        "line": 121,
+        "exported": false
+      },
+      {
+        "name": "updateSet",
+        "kind": "function",
+        "file": "src/tabs/WorkoutsTab.tsx",
+        "line": 130,
+        "exported": false
+      }
+    ],
+    "types": [
+      {
+        "name": "ExerciseType",
+        "kind": "type",
+        "file": "src/types.ts",
+        "line": 1,
+        "exported": true
+      },
+      {
+        "name": "Tab",
+        "kind": "type",
+        "file": "src/App.tsx",
+        "line": 10,
+        "exported": false
+      }
+    ],
+    "enums": []
+  },
+  "publicAPI": [
+    {
+      "name": "AuraFitnessDB",
+      "kind": "class",
+      "file": "src/db.ts",
+      "line": 4,
+      "exported": true
+    },
+    {
+      "name": "convert_csv_to_json",
+      "kind": "function",
+      "file": "Scripts/convert_csv.py",
+      "line": 5,
+      "exported": true
+    },
+    {
+      "name": "Exercise",
+      "kind": "interface",
+      "file": "src/types.ts",
+      "line": 3,
+      "exported": true
+    },
+    {
+      "name": "ExerciseType",
+      "kind": "type",
+      "file": "src/types.ts",
+      "line": 1,
+      "exported": true
+    },
+    {
+      "name": "LoggedExercise",
+      "kind": "interface",
+      "file": "src/types.ts",
+      "line": 39,
+      "exported": true
+    },
+    {
+      "name": "LoggedSet",
+      "kind": "interface",
+      "file": "src/types.ts",
+      "line": 31,
+      "exported": true
+    },
+    {
+      "name": "SessionTemplate",
+      "kind": "interface",
+      "file": "src/types.ts",
+      "line": 23,
+      "exported": true
+    },
+    {
+      "name": "TemplateExercise",
+      "kind": "interface",
+      "file": "src/types.ts",
+      "line": 16,
+      "exported": true
+    },
+    {
+      "name": "WorkoutSession",
+      "kind": "interface",
+      "file": "src/types.ts",
+      "line": 44,
+      "exported": true
+    }
+  ],
+  "dependencies": {
+    "mostImported": [
+      {
+        "file": "src/db.ts",
+        "importedBy": 5,
+        "description": "Source code root"
+      },
+      {
+        "file": "src/types.ts",
+        "importedBy": 3,
+        "description": "Type definitions"
+      },
+      {
+        "file": "src/App.tsx",
+        "importedBy": 1,
+        "description": "Source code root"
+      },
+      {
+        "file": "src/tabs/DashboardTab.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/tabs/WorkoutsTab.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/tabs/LibraryTab.tsx",
+        "importedBy": 1
+      },
+      {
+        "file": "src/tabs/CoachTab.tsx",
+        "importedBy": 1
+      }
+    ]
+  },
+  "stats": {
+    "totalSymbols": 22,
+    "exportedSymbols": 9,
+    "analysisTimeMs": 20
+  },
+  "keyFiles": [
+    {
+      "path": "src/main.tsx",
+      "description": "Source code root",
+      "category": "entrypoint"
+    },
+    {
+      "path": "package.json",
+      "description": "Package manifest",
+      "category": "config"
+    },
+    {
+      "path": "tsconfig.json",
+      "description": "TypeScript configuration",
+      "category": "config"
+    },
+    {
+      "path": "vite.config.ts",
+      "description": "Tool configuration",
+      "category": "config"
+    },
+    {
+      "path": "src/types.ts",
+      "description": "Type definitions",
+      "category": "types"
+    }
+  ],
+  "navigation": {
+    "tests": "src/**/*.test.ts",
+    "config": [
+      "package.json",
+      "tsconfig.json",
+      "vite.config.ts"
+    ],
+    "types": [
+      "src/types.ts"
+    ],
+    "mainLogic": [
+      "src"
+    ]
+  }
+}
