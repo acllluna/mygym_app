@@ -9,6 +9,30 @@
   --color-apple-text-muted: #8E8E93;
   --color-apple-accent: #32ADE6; /* Cyan/Blue accent */
   --color-apple-green: #34C759;
+  --apple-blue: #007AFF;
+  --apple-green: #32D74B;
+  --apple-red: #FF3B30;
+  
+  --layout-padding: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --layout-padding: 1rem;
+  }
+  
+  h1 { font-size: 1.85rem !important; }
+  h2 { font-size: 1.5rem !important; }
+}
+
+.mobile-header {
+  padding: 1.5rem var(--layout-padding) 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .mobile-header {
+    padding: 1rem var(--layout-padding) 0.5rem;
+  }
 }
 
 body {

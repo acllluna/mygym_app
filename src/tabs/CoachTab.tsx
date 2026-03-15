@@ -125,23 +125,23 @@ IMPORTANT: Always wrap the JSON in triple backticks with the 'json' identifier. 
 
   return (
     <div className="flex flex-col h-full overflow-hidden relative bg-black">
-      <div className="px-6 py-4 border-b border-white/10 bg-black/80 backdrop-blur-xl sticky top-0 z-10 shrink-0 flex justify-between items-center">
+      <div className="px-5 py-3 border-b border-white/10 bg-black/80 backdrop-blur-xl sticky top-0 z-10 shrink-0 flex justify-between items-center sm:px-6 sm:py-4">
         <div>
-          <h2 className="text-2xl font-semibold">Aura Coach</h2>
+          <h2 className="text-xl font-semibold sm:text-2xl">Aura Coach</h2>
           <div className="flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-apple-green animate-pulse" />
-            <span className="text-[10px] text-apple-text-muted font-bold tracking-widest uppercase">Online</span>
+            <span className="text-[9px] sm:text-[10px] text-apple-text-muted font-bold tracking-widest uppercase">Online</span>
           </div>
         </div>
         {isSaving && (
           <div className="flex items-center gap-2 bg-apple-accent/10 border border-apple-accent/20 px-3 py-1 rounded-full animate-in zoom-in duration-300">
             <div className="w-2 h-2 rounded-full bg-apple-accent animate-ping" />
-            <span className="text-[10px] text-apple-accent font-black uppercase tracking-tight">Syncing Plans</span>
+            <span className="text-[9px] sm:text-[10px] text-apple-accent font-black uppercase tracking-tight">Syncing Plans</span>
           </div>
         )}
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 sm:p-6 sm:space-y-6">
         {messages.map((msg, idx) => (
           <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
             <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-apple-accent text-black' : 'bg-apple-card border border-white/10'}`}>
@@ -178,7 +178,7 @@ IMPORTANT: Always wrap the JSON in triple backticks with the 'json' identifier. 
         )}
       </div>
 
-      <div className="shrink-0 px-6 py-4 bg-gradient-to-t from-black via-black to-transparent">
+      <div className="shrink-0 px-4 py-3 bg-gradient-to-t from-black via-black to-transparent sm:px-6 sm:py-4">
         <div className="relative flex items-center">
           <input
             type="text"
@@ -186,14 +186,14 @@ IMPORTANT: Always wrap the JSON in triple backticks with the 'json' identifier. 
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Ask your coach..."
-            className="w-full bg-apple-card border border-white/10 rounded-full py-3.5 pl-5 pr-12 text-white placeholder:text-apple-text-muted focus:outline-none focus:border-apple-accent transition-colors"
+            className="w-full bg-apple-card border border-white/10 rounded-full py-2.5 sm:py-3.5 pl-4 sm:pl-5 pr-12 text-sm sm:text-base text-white placeholder:text-apple-text-muted focus:outline-none focus:border-apple-accent transition-colors"
           />
           <button 
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="absolute right-2 w-10 h-10 bg-apple-accent text-black rounded-full flex items-center justify-center disabled:opacity-50 disabled:bg-white/10 disabled:text-white/50 transition-colors"
+            className="absolute right-1.5 w-8 h-8 sm:w-10 sm:h-10 bg-apple-accent text-black rounded-full flex items-center justify-center disabled:opacity-50 disabled:bg-white/10 disabled:text-white/50 transition-colors"
           >
-            <Send size={18} className="ml-0.5" />
+            <Send size={16} className="ml-0.5 sm:size-18" />
           </button>
         </div>
       </div>

@@ -109,9 +109,9 @@ export default function WorkoutsTab({ onNavigateToLibrary }: { onNavigateToLibra
   }
 
   return (
-    <div className="px-6 py-8 h-full flex flex-col overflow-hidden">
-      <div className="flex justify-between items-center mb-6 shrink-0">
-        <h2 className="text-2xl font-semibold">Workouts</h2>
+    <div className="px-var(--layout-padding) py-6 sm:py-8 h-full flex flex-col overflow-hidden">
+      <div className="flex justify-between items-center mb-4 sm:mb-6 shrink-0">
+        <h2 className="text-xl sm:text-2xl font-semibold">Workouts</h2>
         {templates && templates.length > 0 && (
           <button 
             onClick={() => setShowBuilder(true)}

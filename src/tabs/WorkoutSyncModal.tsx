@@ -103,18 +103,18 @@ export default function WorkoutSyncModal({ isOpen, onClose, plan, onImportComple
       
       <div className="relative w-full max-w-2xl bg-apple-card border border-white/10 rounded-[32px] overflow-hidden flex flex-col max-h-[90vh] shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-black/40">
+        <div className="flex items-center justify-between px-6 py-4 sm:px-8 sm:py-6 border-b border-white/5 bg-black/40">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Review Workouts</h2>
-            <p className="text-sm text-apple-text-muted mt-1 uppercase font-black tracking-widest text-[10px]">Aura Sync v2</p>
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Review Workouts</h2>
+            <p className="text-[9px] sm:text-[10px] text-apple-text-muted mt-0.5 uppercase font-black tracking-widest">Aura Sync v2</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-            <X size={24} />
+            <X size={20} className="sm:size-24" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-10">
+        <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-6 sm:space-y-10">
           {editedPlan.map((template, tIdx) => (
             <div key={tIdx} className="space-y-6">
               <div className="space-y-2">
@@ -148,16 +148,18 @@ export default function WorkoutSyncModal({ isOpen, onClose, plan, onImportComple
                   );
                   
                   return (
-                    <div key={eIdx} className="group flex items-center gap-4 bg-white/5 hover:bg-white/10 p-4 rounded-2xl transition-all border border-white/5">
-                      <GripVertical size={16} className="text-white/20" />
+                    <div key={eIdx} className="group flex items-start sm:items-center gap-3 sm:gap-4 bg-white/5 hover:bg-white/10 p-3 sm:p-4 rounded-2xl transition-all border border-white/5">
+                      <div className="pt-2 sm:pt-0">
+                        <GripVertical size={14} className="text-white/20 sm:size-16" />
+                      </div>
                       
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center gap-2">
+                      <div className="flex-1 space-y-1.5 sm:space-y-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                           <input
                             type="text"
                             value={exercise.name}
                             onChange={(e) => handleUpdateExercise(tIdx, eIdx, { name: e.target.value })}
-                            className="bg-transparent font-medium focus:outline-none border-b border-transparent focus:border-apple-accent flex-1"
+                            className="bg-transparent font-medium focus:outline-none border-b border-transparent focus:border-apple-accent flex-1 text-sm sm:text-base"
                           />
                           {isMatched ? (
                             <div className="flex items-center gap-1 text-[10px] text-apple-green font-bold uppercase tracking-tighter">
@@ -207,23 +209,23 @@ export default function WorkoutSyncModal({ isOpen, onClose, plan, onImportComple
         </div>
 
         {/* Footer */}
-        <div className="p-8 bg-black/40 border-t border-white/5 flex gap-4">
+        <div className="p-5 sm:p-8 bg-black/40 border-t border-white/5 flex gap-3 sm:gap-4">
           <button
             onClick={onClose}
-            className="flex-1 py-4 rounded-2xl bg-white/5 hover:bg-white/10 font-bold transition-all border border-white/5"
+            className="flex-1 py-3 sm:py-4 rounded-2xl bg-white/5 hover:bg-white/10 font-bold transition-all border border-white/5 text-sm sm:text-base"
           >
             Cancel
           </button>
           <button
             onClick={handleImport}
             disabled={isSaving}
-            className="flex-[2] py-4 rounded-2xl bg-apple-accent hover:bg-apple-accent/90 text-black font-bold transition-all shadow-xl shadow-apple-accent/20 flex items-center justify-center gap-2"
+            className="flex-[2] py-3 sm:py-4 rounded-2xl bg-apple-accent hover:bg-apple-accent/90 text-black font-bold transition-all shadow-xl shadow-apple-accent/20 flex items-center justify-center gap-2 text-sm sm:text-base"
           >
             {isSaving ? (
               <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
             ) : (
               <>
-                <Save size={20} />
+                <Save size={18} className="sm:size-20" />
                 Save to Library
               </>
             )}
