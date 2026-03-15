@@ -136,19 +136,6 @@ export default function LibraryTab() {
     <div className="px-6 py-8 flex flex-col h-full overflow-hidden relative">
       <div className="flex justify-between items-center mb-6 shrink-0">
         <h2 className="text-2xl font-semibold">Library</h2>
-        <div className="relative">
-          <input 
-            type="file" 
-            accept=".csv,.json" 
-            className="hidden" 
-            id="import-file" 
-            onChange={handleFileUpload} 
-          />
-          <label htmlFor="import-file" className="flex items-center gap-2 bg-apple-card px-3 py-1.5 rounded-full text-sm font-medium border border-white/10 cursor-pointer hover:bg-white/10 transition-colors">
-            <Upload size={16} />
-            Import
-          </label>
-        </div>
       </div>
 
       <div className="flex gap-4 mb-6 shrink-0">
@@ -158,30 +145,20 @@ export default function LibraryTab() {
           </div>
           <input
             type="text"
-            placeholder="Search exercises..."
+            placeholder="Find exercises..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-apple-card border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-white placeholder:text-apple-text-muted focus:outline-none focus:border-apple-accent transition-colors"
+            className="w-full bg-apple-card border border-white/5 rounded-2xl py-3 pl-10 pr-4 text-base text-white placeholder:text-apple-text-muted focus:outline-none focus:ring-2 focus:ring-apple-accent/50 transition-all shadow-lg"
           />
         </div>
-        <select 
-          value={groupBy}
-          onChange={(e) => setGroupBy(e.target.value as any)}
-          className="bg-apple-card border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-apple-accent transition-colors appearance-none"
-        >
-          <option value="none">Group By</option>
-          <option value="muscleGroup">Target Muscle</option>
-          <option value="bodyPart">Body Part</option>
-          <option value="equipment">Equipment</option>
-        </select>
       </div>
 
       {/* Filters Row */}
-      <div className="flex gap-3 mb-6 shrink-0 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex gap-2 mb-6 shrink-0">
         <select 
           value={filterBodyPart}
           onChange={(e) => setFilterBodyPart(e.target.value)}
-          className="bg-apple-card border border-white/10 rounded-full px-4 py-1.5 text-sm text-white focus:outline-none focus:border-apple-accent transition-colors appearance-none whitespace-nowrap min-w-max"
+          className="flex-1 bg-apple-card border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-apple-accent transition-colors appearance-none"
         >
           <option value="all">Body Part: All</option>
           {uniqueBodyParts.map(bp => (
@@ -190,20 +167,9 @@ export default function LibraryTab() {
         </select>
 
         <select 
-          value={filterMuscle}
-          onChange={(e) => setFilterMuscle(e.target.value)}
-          className="bg-apple-card border border-white/10 rounded-full px-4 py-1.5 text-sm text-white focus:outline-none focus:border-apple-accent transition-colors appearance-none whitespace-nowrap min-w-max"
-        >
-          <option value="all">Target Muscle: All</option>
-          {uniqueMuscles.map(m => (
-            <option key={m} value={m}>{m}</option>
-          ))}
-        </select>
-
-        <select 
           value={filterEquipment}
           onChange={(e) => setFilterEquipment(e.target.value)}
-          className="bg-apple-card border border-white/10 rounded-full px-4 py-1.5 text-sm text-white focus:outline-none focus:border-apple-accent transition-colors appearance-none whitespace-nowrap min-w-max"
+          className="flex-1 bg-apple-card border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-apple-accent transition-colors appearance-none"
         >
           <option value="all">Equipment: All</option>
           {uniqueEquipment.map(eq => (
@@ -295,29 +261,8 @@ function ExerciseCard({ exercise, selectedIds, toggleSelection }: { exercise: Ex
           <Dumbbell size={24} className="text-white/20" />
         )}
       </div>
-      <div className="flex-1 min-w-0 pr-8">
-        <h3 className="font-medium text-base leading-tight truncate">{exercise.name}</h3>
-        
-        <div className="mt-2 flex flex-col gap-1.5">
-          <div className="flex items-center gap-2 text-[10px] text-apple-text-muted">
-            <span className="font-medium text-white/70">Main:</span>
-            <span className="truncate">{exercise.muscleGroup || 'Unknown'}</span>
-            <span className="opacity-30">•</span>
-            <span className="truncate">{exercise.bodyPart || 'Unknown'}</span>
-          </div>
-
-          <div className="flex items-center gap-2 text-[10px] text-apple-text-muted">
-            <span className="font-medium text-white/70">Equipment:</span>
-            <span className="truncate">{exercise.equipment || 'None'}</span>
-          </div>
-
-          {exercise.secondaryMuscles && exercise.secondaryMuscles.length > 0 && (
-            <div className="flex items-center gap-2 text-[10px] text-apple-text-muted">
-              <span className="font-medium text-white/70">Other:</span>
-              <span className="truncate">{exercise.secondaryMuscles.join(', ')}</span>
-            </div>
-          )}
-        </div>
+      <div className="flex-1 min-w-0">
+        <h3 className="font-semibold text-lg leading-snug">{exercise.name}</h3>
       </div>
       <div className="flex items-center">
         <button 

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { Play, ArrowLeft, Plus, Trash2, ChevronUp, ChevronDown, Check, Minus, Dumbbell } from 'lucide-react';
+import { Reorder } from 'motion/react';
+import { Play, ArrowLeft, Plus, Trash2, Dumbbell, GripVertical } from 'lucide-react';
 import { SessionTemplate, Exercise, TemplateExercise } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 import ExerciseDetailsModal from '../components/ExerciseDetailsModal';
@@ -10,7 +11,7 @@ interface WorkoutDetailsProps {
   templateId: string;
   onClose: () => void;
   onStart: (template: SessionTemplate) => void;
-  onAddExerciseClick: () => void; // Pass control up if we want to open a library selector
+  onAddExerciseClick: () => void;
 }
 
 export default function WorkoutDetails({ templateId, onClose, onStart, onAddExerciseClick }: WorkoutDetailsProps) {
@@ -20,68 +21,59 @@ export default function WorkoutDetails({ templateId, onClose, onStart, onAddExer
   
   if (!template || !allExercises) return null;
 
-  const moveExercise = async (index: number, direction: 'up' | 'down') => {
-    if (direction === 'up' && index === 0) return;
-    if (direction === 'down' && index === template.exercises.length - 1) return;
-    
-    const newExercises = [...template.exercises];
-    const swapIndex = direction === 'up' ? index - 1 : index + 1;
-    
-    [newExercises[index], newExercises[swapIndex]] = [newExercises[swapIndex], newExercises[index]];
-    
+  const updateExercises = async (newExercises: TemplateExercise[]) => {
     await db.templates.update(templateId, { exercises: newExercises });
   };
 
   const removeExercise = async (index: number) => {
     const newExercises = template.exercises.filter((_, i) => i !== index);
-    await db.templates.update(templateId, { exercises: newExercises });
-  };
-  
-  const updateExercise = async (index: number, field: 'targetSets' | 'targetReps', value: number) => {
-    if (value < 1) value = 1;
-    const newExercises = [...template.exercises];
-    newExercises[index] = { ...newExercises[index], [field]: value };
-    await db.templates.update(templateId, { exercises: newExercises });
+    await updateExercises(newExercises);
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-[60] flex flex-col font-sans text-white">
+    <div className="fixed inset-0 bg-black z-[100] flex flex-col font-sans text-white overflow-hidden">
       {/* Header */}
-      <div className="bg-apple-card/90 backdrop-blur-xl border-b border-white/10 px-4 py-4 flex items-center sticky top-0 z-50 shrink-0">
-        <button onClick={onClose} className="p-2 text-white/70 hover:text-white transition-colors">
-          <ArrowLeft size={24} />
-        </button>
-        <div className="flex-1 mx-3 pr-2">
-          <input 
-            type="text" 
-            value={template.name}
-            onChange={(e) => db.templates.update(templateId, { name: e.target.value })}
-            className="bg-transparent font-semibold text-lg w-full focus:outline-none focus:text-apple-accent transition-colors truncate"
-            placeholder="Workout Name"
-          />
+      <div 
+        className="bg-black border-b border-white/10 px-4 pb-4 flex items-center sticky top-0 z-50 shrink-0"
+        style={{ paddingTop: 'var(--safe-top)' }}
+      >
+        <div className="flex items-center w-full pt-4">
+          <button onClick={onClose} className="p-2 text-white/70 hover:text-white transition-colors">
+            <ArrowLeft size={24} />
+          </button>
+          <div className="flex-1 mx-2">
+            <input 
+              type="text" 
+              value={template.name}
+              onChange={(e) => db.templates.update(templateId, { name: e.target.value })}
+              className="bg-transparent font-semibold text-lg w-full focus:outline-none focus:text-apple-accent transition-colors truncate"
+              placeholder="Workout Name"
+            />
+          </div>
+          <button 
+            onClick={async () => {
+              if (window.confirm(`Are you sure you want to delete "${template.name}"?`)) {
+                await db.templates.delete(templateId);
+                onClose();
+              }
+            }}
+            className="p-2 text-white/50 hover:text-red-400 transition-colors shrink-0"
+            title="Delete Workout"
+          >
+            <Trash2 size={24} />
+          </button>
         </div>
-        <button 
-          onClick={async () => {
-            if (window.confirm(`Are you sure you want to delete "${template.name}"?`)) {
-              await db.templates.delete(templateId);
-              onClose();
-            }
-          }}
-          className="p-2 text-white/50 hover:text-red-400 transition-colors"
-          title="Delete Workout"
-        >
-          <Trash2 size={24} />
-        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 py-6 pb-40">
         <div className="mb-8">
+          <h4 className="text-[10px] font-bold text-apple-text-muted uppercase tracking-widest mb-2 px-1">Description</h4>
           <textarea 
             value={template.description || ''}
             onChange={(e) => db.templates.update(templateId, { description: e.target.value })}
-            placeholder="Add a description..."
+            placeholder="Add a detailed description for this routine..."
             rows={2}
-            className="w-full bg-transparent text-sm text-apple-text-muted focus:outline-none focus:text-white transition-colors resize-none"
+            className="w-full bg-apple-card border border-white/5 rounded-2xl p-4 text-sm text-apple-text-muted focus:outline-none focus:text-white transition-colors resize-none"
           />
         </div>
 
@@ -91,48 +83,46 @@ export default function WorkoutDetails({ templateId, onClose, onStart, onAddExer
             <span className="text-apple-accent text-sm font-medium">{template.exercises.length}</span>
           </div>
 
-          {template.exercises.map((ex, idx) => {
-            const exDef = allExercises.find(e => e.id === ex.exerciseId);
-            return (
-              <div key={`${ex.exerciseId}-${idx}`} className="bg-apple-card rounded-2xl p-4 border border-white/5 relative">
-                <div className="absolute right-2 top-2 flex flex-col items-center gap-1 bg-black/40 p-1 rounded-xl border border-white/5 text-white/50">
-                  <button onClick={() => moveExercise(idx, 'up')} disabled={idx === 0} className="hover:text-white disabled:opacity-30 disabled:hover:text-white/50"><ChevronUp size={16} /></button>
-                  <button onClick={() => removeExercise(idx)} className="text-red-400 p-1"><Trash2 size={16} /></button>
-                  <button onClick={() => moveExercise(idx, 'down')} disabled={idx === template.exercises.length - 1} className="hover:text-white disabled:opacity-30 disabled:hover:text-white/50"><ChevronDown size={16} /></button>
-                </div>
+          <Reorder.Group axis="y" values={template.exercises} onReorder={updateExercises} className="space-y-3">
+            {template.exercises.map((ex, idx) => {
+              const exDef = allExercises.find(e => e.id === ex.exerciseId);
+              return (
+                <Reorder.Item 
+                  key={`${ex.exerciseId}-${idx}`} 
+                  value={ex}
+                  className="bg-apple-card rounded-3xl p-4 border border-white/5 relative active:shadow-xl active:z-10"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="cursor-grab active:cursor-grabbing text-white/30 hover:text-white/60">
+                      <GripVertical size={20} />
+                    </div>
+                    
+                    <div 
+                      className="w-14 h-14 bg-white/5 rounded-2xl overflow-hidden shrink-0 relative cursor-pointer"
+                      onClick={() => { if (exDef) setSelectedExercise(exDef); }}
+                    >
+                      {exDef?.thumbnail_url ? (
+                        <img src={exDef.thumbnail_url} alt={exDef.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center"><Dumbbell size={20} className="text-white/20" /></div>
+                      )}
+                    </div>
 
-                <div className="flex gap-4 pr-14">
-                  <div 
-                    className="w-16 h-16 bg-white/5 rounded-2xl overflow-hidden shrink-0 relative cursor-pointer group"
-                    onClick={() => { if (exDef) setSelectedExercise(exDef); }}
-                  >
-                    {exDef?.thumbnail_url ? (
-                      <img src={exDef.thumbnail_url} alt={exDef.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center"><Dumbbell size={20} className="text-white/20" /></div>
-                    )}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-base leading-tight truncate">{exDef?.name || 'Unknown Exercise'}</h4>
+                    </div>
+
+                    <button 
+                      onClick={() => removeExercise(idx)} 
+                      className="p-2 text-red-400/50 hover:text-red-400 transition-colors"
+                    >
+                      <Trash2 size={20} />
+                    </button>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold mb-3 text-sm sm:text-base leading-tight pr-2 truncate">{exDef?.name || 'Unknown Exercise'}</h4>
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 text-sm scale-90 origin-left">
-                    <div className="flex items-center gap-2 bg-black/40 px-2 py-1 rounded-lg border border-white/5 w-fit">
-                      <span className="text-[10px] text-apple-text-muted font-medium w-6 uppercase">Sets</span>
-                      <button onClick={() => updateExercise(idx, 'targetSets', ex.targetSets - 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Minus size={12}/></button>
-                      <span className="font-mono text-sm font-semibold w-4 text-center">{ex.targetSets}</span>
-                      <button onClick={() => updateExercise(idx, 'targetSets', ex.targetSets + 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Plus size={12}/></button>
-                    </div>
-                    <div className="flex items-center gap-2 bg-black/40 px-2 py-1 rounded-lg border border-white/5 w-fit">
-                      <span className="text-[10px] text-apple-text-muted font-medium w-6 uppercase">Reps</span>
-                      <button onClick={() => updateExercise(idx, 'targetReps', (ex.targetReps || 10) - 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Minus size={12}/></button>
-                      <span className="font-mono text-sm font-semibold w-4 text-center">{ex.targetReps || 10}</span>
-                      <button onClick={() => updateExercise(idx, 'targetReps', (ex.targetReps || 10) + 1)} className="w-6 h-6 flex items-center justify-center bg-white/10 rounded text-white hover:bg-white/20"><Plus size={12}/></button>
-                    </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                </Reorder.Item>
+              );
+            })}
+          </Reorder.Group>
           
           <button 
             onClick={onAddExerciseClick}

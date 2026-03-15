@@ -29,12 +29,15 @@
 }
 
 .mobile-header {
-  padding: 1.5rem var(--layout-padding) 0.5rem;
+  padding-top: var(--safe-top);
+  padding-left: var(--layout-padding);
+  padding-right: var(--layout-padding);
+  padding-bottom: 0.75rem;
 }
 
 @media (max-width: 640px) {
   .mobile-header {
-    padding: 1rem var(--layout-padding) 0.5rem;
+    padding-top: var(--safe-top);
   }
 }
 
