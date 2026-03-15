@@ -4,6 +4,7 @@ import { Send, Bot, User } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db } from '../db';
 import { v4 as uuidv4 } from 'uuid';
+import WorkoutSyncModal from './WorkoutSyncModal';
 
 export default function CoachTab() {
   const [messages, setMessages] = useState<{role: 'user' | 'model', text: string}[]>([
@@ -12,6 +13,8 @@ export default function CoachTab() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showSyncModal, setShowSyncModal] = useState(false);
+  const [pendingPlan, setPendingPlan] = useState<any>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<any>(null);
 
@@ -51,16 +54,16 @@ JSON Format:
 {
   "templates": [
     {
-      "name": "Leg Endurance (Mountaineering)",
-      "description": "Building climbing stamina",
+      "name": "Template Name",
+      "description": "Short description",
       "exercises": [
-        { "name": "Squat", "targetSets": 4, "targetReps": 15 }
+        { "name": "Exact Library Name", "targetSets": 3, "targetReps": 10 }
       ]
     }
   ]
 }
 \`\`\`
-Be professional, motivating, and focus on functional fitness.`
+IMPORTANT: Always wrap the JSON in triple backticks with the 'json' identifier. Be professional, motivating, and focus on functional fitness.`
           });
 
           chatRef.current = model.startChat({ history: [] });
@@ -96,54 +99,16 @@ Be professional, motivating, and focus on functional fitness.`
         });
       }
 
-      // After streaming finishes, check for JSON to auto-save
+      // After streaming finishes, check for JSON to show the Review button
       const jsonMatch = fullText.match(/\`\`\`json\n([\s\S]*?)\n\`\`\`/);
       if (jsonMatch) {
         try {
-          setIsSaving(true);
           const parsed = JSON.parse(jsonMatch[1]);
           if (parsed.templates && Array.isArray(parsed.templates)) {
-            let savedCount = 0;
-            for (const t of parsed.templates) {
-              const templateExercises = [];
-              for (const ex of t.exercises) {
-                const matchedEx = exercises.find(e => 
-                  e.name.toLowerCase() === ex.name.toLowerCase() || 
-                  e.name.toLowerCase().includes(ex.name.toLowerCase())
-                );
-                if (matchedEx) {
-                  templateExercises.push({
-                    exerciseId: matchedEx.id,
-                    targetSets: ex.targetSets || 3,
-                    targetReps: ex.targetReps || 10
-                  });
-                }
-              }
-              
-              if (templateExercises.length > 0) {
-                await db.templates.add({
-                  id: uuidv4(),
-                  name: t.name,
-                  description: t.description || "",
-                  exercises: templateExercises,
-                  createdAt: Date.now()
-                });
-                savedCount++;
-              }
-            }
-
-            if (savedCount > 0) {
-              setMessages(prev => {
-                const newMessages = [...prev];
-                newMessages[newMessages.length - 1].text = fullText.replace(jsonMatch[0], `\n\n✨ **Aura Sync:** Automatically saved ${savedCount} workouts to your library.`);
-                return newMessages;
-              });
-            }
+            setPendingPlan(parsed);
           }
         } catch (e) {
-          console.error("Auto-save failed", e);
-        } finally {
-          setIsSaving(false);
+          console.error("JSON parse failed", e);
         }
       }
 
@@ -181,6 +146,18 @@ Be professional, motivating, and focus on functional fitness.`
             </div>
             <div className={`max-w-[80%] rounded-2xl p-4 text-sm leading-relaxed ${msg.role === 'user' ? 'bg-apple-accent text-black rounded-tr-sm' : 'bg-apple-card border border-white/5 rounded-tl-sm'}`}>
               {msg.text.split('\n').map((line, i) => <p key={i} className="mb-1 last:mb-0">{line}</p>)}
+              
+              {/* Review Button - Only show on model messages if JSON was detected in this message */}
+              {msg.role === 'model' && msg.text.includes('```json') && pendingPlan && !isLoading && (
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <button 
+                    onClick={() => setShowSyncModal(true)}
+                    className="w-full py-2 bg-apple-accent/20 hover:bg-apple-accent/30 text-apple-accent border border-apple-accent/30 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                  >
+                    ✨ Review & Import Plan
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -218,6 +195,18 @@ Be professional, motivating, and focus on functional fitness.`
         </div>
       </div>
 
+      <WorkoutSyncModal 
+        isOpen={showSyncModal}
+        onClose={() => setShowSyncModal(false)}
+        plan={pendingPlan}
+        onImportComplete={(count) => {
+          setPendingPlan(null);
+          setMessages(prev => [...prev, { 
+            role: 'model', 
+            text: `✨ **Aura Sync:** Successfully imported ${count} workouts to your library.` 
+          }]);
+        }}
+      />
     </div>
   );
 }
