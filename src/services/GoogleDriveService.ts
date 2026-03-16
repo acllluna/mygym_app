@@ -1,7 +1,7 @@
 import { db } from '../db';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
+const SCOPES = 'https://www.googleapis.com/auth/drive.appdata openid profile email';
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
 
 export interface DriveFileInfo {
@@ -114,32 +114,55 @@ class GoogleDriveService {
     return new Promise<any>((resolve, reject) => {
       try {
         this.tokenClient.callback = async (response: any) => {
+          console.log('GoogleDriveService: GIS callback received', response);
           if (response.error !== undefined) {
+            console.error('GoogleDriveService: GIS error:', response);
             reject(response);
             return;
           }
           this.accessToken = response.access_token;
           
-          // Fetch user info using the token
-          const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: { Authorization: `Bearer ${this.accessToken}` }
-          });
-          const userInfo = await userInfoResponse.json();
+          try {
+            // Fetch user info using the token
+            const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+              headers: { Authorization: `Bearer ${this.accessToken}` }
+            });
 
-          const userData = {
-            id: userInfo.sub,
-            name: userInfo.name,
-            email: userInfo.email,
-            avatarUrl: userInfo.picture,
-            settings: {
-              useCloudSync: true,
-              language: 'en',
-              units: 'kg' as 'kg' | 'lbs'
+            if (!userInfoResponse.ok) {
+              const errorText = await userInfoResponse.text();
+              console.error('GoogleDriveService: User info fetch failed:', errorText);
+              throw new Error('Failed to fetch user information from Google');
             }
-          };
 
-          await db.profiles.put(userData);
-          resolve(userData);
+            const userInfo = await userInfoResponse.json();
+            console.log('GoogleDriveService: User info received:', userInfo);
+
+            if (!userInfo.sub) {
+              console.error('GoogleDriveService: sub missing in userInfo', userInfo);
+              throw new Error('User identifier (sub) missing from Google response');
+            }
+
+            const userData = {
+              id: userInfo.sub,
+              name: userInfo.name || 'Anonymous User',
+              email: userInfo.email,
+              avatarUrl: userInfo.picture,
+              settings: {
+                useCloudSync: true,
+                language: 'en',
+                units: 'kg' as 'kg' | 'lbs'
+              }
+            };
+
+            console.log('GoogleDriveService: Saving profile to DB...', userData);
+            await db.profiles.clear(); // Ensure only one profile exists
+            await db.profiles.add(userData);
+            console.log('GoogleDriveService: Profile saved successfully');
+            resolve(userData);
+          } catch (err: any) {
+            console.error('GoogleDriveService: Profile setup failed:', err);
+            reject(err);
+          }
         };
 
         // requestToken triggers the popup
@@ -164,7 +187,11 @@ class GoogleDriveService {
       await this.signIn();
     }
     // Set token for gapi client
-    (window as any).gapi.client.setToken({ access_token: this.accessToken });
+    if ((window as any).gapi?.client?.setToken) {
+      (window as any).gapi.client.setToken({ access_token: this.accessToken });
+    } else {
+      console.warn('GoogleDriveService: gapi.client.setToken not available');
+    }
   }
 
   async uploadBackup() {

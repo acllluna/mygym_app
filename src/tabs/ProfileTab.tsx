@@ -66,12 +66,40 @@ export default function ProfileTab() {
     setError(null);
     try {
       await googleDriveService.uploadBackup();
-      await db.profiles.update(profile!.id, { lastSync: Date.now() });
+      if (profile) {
+        await db.profiles.update(profile.id, { lastSync: Date.now() });
+      }
       await checkLastBackup();
     } catch (err: any) {
       setError(err.message || 'Sync failed');
     } finally {
       setIsSyncing(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    try {
+      const data = {
+        exercises: await db.exercises.toArray(),
+        templates: await db.templates.toArray(),
+        sessions: await db.sessions.toArray(),
+        profiles: await db.profiles.toArray(),
+        exportDate: Date.now(),
+        version: '1.2.0'
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `aura_fitness_export_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed:', err);
+      setError('Failed to export data');
     }
   };
 
@@ -176,34 +204,6 @@ export default function ProfileTab() {
         </div>
       )}
 
-  const handleExportData = async () => {
-    try {
-      const data = {
-        exercises: await db.exercises.toArray(),
-        templates: await db.templates.toArray(),
-        sessions: await db.sessions.toArray(),
-        profiles: await db.profiles.toArray(),
-        exportDate: Date.now(),
-        version: '1.2.0'
-      };
-
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `aura_fitness_export_${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Export failed:', err);
-      setError('Failed to export data');
-    }
-  };
-
-  return (
-// ... existing code ...
       {/* Data Management */}
       <h3 className="text-sm font-medium text-apple-text-muted uppercase tracking-wider ml-2 mb-4">
         Data Management
