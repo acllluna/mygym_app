@@ -22,6 +22,11 @@ export default function ProfileTab() {
   const [lastBackup, setLastBackup] = useState<DriveFileInfo | null>(null);
 
   useEffect(() => {
+    // Pre-load Google scripts
+    googleDriveService.init().catch(err => {
+      console.error('Failed to pre-load Google scripts:', err);
+    });
+
     if (profile) {
       checkLastBackup();
     }
