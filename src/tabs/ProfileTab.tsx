@@ -176,12 +176,43 @@ export default function ProfileTab() {
         </div>
       )}
 
+  const handleExportData = async () => {
+    try {
+      const data = {
+        exercises: await db.exercises.toArray(),
+        templates: await db.templates.toArray(),
+        sessions: await db.sessions.toArray(),
+        profiles: await db.profiles.toArray(),
+        exportDate: Date.now(),
+        version: '1.2.0'
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `aura_fitness_export_${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed:', err);
+      setError('Failed to export data');
+    }
+  };
+
+  return (
+// ... existing code ...
       {/* Data Management */}
       <h3 className="text-sm font-medium text-apple-text-muted uppercase tracking-wider ml-2 mb-4">
         Data Management
       </h3>
       <div className="bg-apple-card border border-white/5 rounded-3xl overflow-hidden shadow-lg">
-        <button className="w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors border-b border-white/5 text-left">
+        <button 
+          onClick={handleExportData}
+          className="w-full flex items-center justify-between p-5 hover:bg-white/5 transition-colors border-b border-white/5 text-left"
+        >
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-500/10 rounded-xl">
               <Database size={20} className="text-blue-500" />
