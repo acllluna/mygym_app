@@ -7,9 +7,15 @@ import { v4 as uuidv4 } from 'uuid';
 import WorkoutSyncModal from './WorkoutSyncModal';
 
 export default function CoachTab() {
-  const [messages, setMessages] = useState<{role: 'user' | 'model', text: string}[]>([
-    { role: 'model', text: "Hi! I'm your Aura AI Coach. Tell me your goals, and I'll build a custom workout plan using your exercise library. For example: 'I want to train for mountaineering'." }
-  ]);
+  const [messages, setMessages] = useState<{role: 'user' | 'model', text: string}[]>(() => {
+    const saved = localStorage.getItem('aura_coach_messages');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) {}
+    }
+    return [
+      { role: 'model', text: "Hi! I'm your Aura AI Coach. Tell me your goals, and I'll build a custom workout plan using your exercise library. For example: 'I want to train for mountaineering'." }
+    ];
+  });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -17,6 +23,7 @@ export default function CoachTab() {
   const [pendingPlan, setPendingPlan] = useState<any>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const chatRef = useRef<any>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -24,12 +31,17 @@ export default function CoachTab() {
     }
   }, [messages, isLoading]);
 
+  useEffect(() => {
+    localStorage.setItem('aura_coach_messages', JSON.stringify(messages));
+  }, [messages]);
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
     
     const userMsg = input.trim();
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setInput('');
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
     setIsLoading(true);
 
     try {
@@ -69,7 +81,25 @@ JSON Format:
 IMPORTANT: Always wrap the JSON in triple backticks with the 'json' identifier. Be professional, motivating, and focus on functional fitness.`
           });
 
-          chatRef.current = model.startChat({ history: [] });
+
+          // Build valid history for Gemini from saved messages
+          const validHistory = [];
+          let expectedRole = 'user';
+          for (let i = 1; i < messages.length; i++) {
+             const msg = messages[i];
+             if (msg.role === expectedRole && msg.text.trim()) {
+                 validHistory.push({
+                     role: msg.role,
+                     parts: [{ text: msg.text }]
+                 });
+                 expectedRole = expectedRole === 'user' ? 'model' : 'user';
+             }
+          }
+          if (validHistory.length > 0 && validHistory[validHistory.length - 1].role === 'user') {
+              validHistory.pop();
+          }
+
+          chatRef.current = model.startChat({ history: validHistory as any });
           console.log('Gemini Init - Chat started successfully');
         } catch (initErr) {
           console.error('Gemini Init Failed:', initErr);
@@ -179,19 +209,30 @@ IMPORTANT: Always wrap the JSON in triple backticks with the 'json' identifier. 
       </div>
 
       <div className="shrink-0 px-4 py-3 bg-gradient-to-t from-black via-black to-transparent sm:px-6 sm:py-4">
-        <div className="relative flex items-center">
-          <input
-            type="text"
+        <div className="relative flex items-end">
+          <textarea
+            ref={textareaRef}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            onChange={(e) => {
+              setInput(e.target.value);
+              e.target.style.height = 'auto';
+              e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
             placeholder="Ask your coach..."
-            className="w-full bg-apple-card border border-white/10 rounded-full py-2.5 sm:py-3.5 pl-4 sm:pl-5 pr-12 text-sm sm:text-base text-white placeholder:text-apple-text-muted focus:outline-none focus:border-apple-accent transition-colors"
+            rows={1}
+            className="w-full bg-apple-card border border-white/10 rounded-2xl sm:rounded-3xl py-3 sm:py-3.5 pl-4 sm:pl-5 pr-12 text-sm sm:text-base text-white placeholder:text-apple-text-muted focus:outline-none focus:border-apple-accent transition-colors resize-none overflow-y-auto"
+            style={{ minHeight: '44px', maxHeight: '120px' }}
           />
           <button 
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="absolute right-1.5 w-8 h-8 sm:w-10 sm:h-10 bg-apple-accent text-black rounded-full flex items-center justify-center disabled:opacity-50 disabled:bg-white/10 disabled:text-white/50 transition-colors"
+            className="absolute right-1.5 bottom-1.5 w-8 h-8 sm:w-10 sm:h-10 bg-apple-accent text-black rounded-full flex items-center justify-center disabled:opacity-50 disabled:bg-white/10 disabled:text-white/50 transition-colors"
           >
             <Send size={16} className="ml-0.5 sm:size-18" />
           </button>

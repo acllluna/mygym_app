@@ -16,26 +16,21 @@ class GoogleDriveService {
   private gapi: any = null;
   private tokenClient: any = null;
   private accessToken: string | null = null;
+  private initPromise: Promise<void> | null = null;
 
   async init() {
-    console.log('GoogleDriveService: Initializing libraries...');
-    return new Promise<void>((resolve, reject) => {
-      if (this.gapi && this.tokenClient) {
-        console.log('GoogleDriveService: Already initialized');
-        return resolve();
-      }
+    if (this.initPromise) {
+      return this.initPromise;
+    }
 
+    console.log('GoogleDriveService: Initializing libraries...');
+    this.initPromise = new Promise<void>((resolve, reject) => {
       // 1. Load Google API Client (GAPI)
       const loadGapi = () => {
         return new Promise<void>((res, rej) => {
           const GAPI_SCRIPT_ID = 'gapi-js';
           if (document.getElementById(GAPI_SCRIPT_ID)) {
-            if ((window as any).gapi) res();
-            else {
-              const existing = document.getElementById(GAPI_SCRIPT_ID);
-              existing!.onload = () => res();
-            }
-            return;
+            if ((window as any).gapi) return res();
           }
 
           const script = document.createElement('script');
@@ -71,12 +66,8 @@ class GoogleDriveService {
                 scope: SCOPES,
                 callback: '',
               });
-              res();
-            } else {
-              const existing = document.getElementById(GIS_SCRIPT_ID);
-              existing!.onload = () => res(); // Simplified, might need careful handling
+              return res();
             }
-            return;
           }
 
           const script = document.createElement('script');
@@ -103,9 +94,12 @@ class GoogleDriveService {
         })
         .catch(err => {
           console.error('GoogleDriveService: Initialization failed:', err);
+          this.initPromise = null; // allow retrying
           reject(err);
         });
     });
+
+    return this.initPromise;
   }
 
   async signIn() {

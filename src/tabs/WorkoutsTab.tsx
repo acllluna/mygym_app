@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
 import { Play, MoreVertical, X, Check, Clock, Plus, Minus, Trash2, Pause, Square, Dumbbell } from 'lucide-react';
@@ -209,12 +209,19 @@ function ActiveSessionView({
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   
   const exercises = useLiveQuery(() => db.exercises.toArray());
+  const lastTickTime = useRef(Date.now());
 
   useEffect(() => {
     let interval: number;
     if (isPlaying && !showSummary) {
+      lastTickTime.current = Date.now();
       interval = window.setInterval(() => {
-        setElapsed(prev => prev + 1);
+        const now = Date.now();
+        const delta = Math.floor((now - lastTickTime.current) / 1000);
+        if (delta > 0) {
+          setElapsed(prev => prev + delta);
+          lastTickTime.current += delta * 1000;
+        }
       }, 1000);
     }
     return () => clearInterval(interval);
